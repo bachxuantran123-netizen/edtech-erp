@@ -10,27 +10,103 @@
 - Ưu tiên: code sạch, dễ mở rộng
 
 ## 2. Project Structure
+- Multi-module Gradle project (database-per-service)
 - Package gốc: `com.example.edtecherp`
-- Cấu trúc dự kiến theo Microservices:
+- Cấu trúc:
   ```
   edtech-erp/
-  ├── src/main/java/com/example/edtecherp/
-  │   ├── entity/          → JPA Entities
-  │   ├── repository/      → Spring Data JPA repositories
-  │   ├── service/         → Service interfaces
-  │   ├── service/impl/    → Service implementations
-  │   ├── controller/      → REST API endpoints
-  │   ├── dto/             → Request/Response DTOs
-  │   ├── config/          → Security, Keycloak, OpenFeign configs
-  │   ├── exception/       → Custom exceptions & global handler
-  │   └── enums/           → Enums (Status, Role...)
-  ├── src/main/resources/
-  │   ├── application.yml  → Config chính (PostgreSQL, Keycloak)
-  │   └── .env             → Biến môi trường (DB credentials)
-  ├── documents/           → Tài liệu dự án (overview, sprint backlog, slides)
-  ├── build.gradle         → Dependencies & plugins
-  ├── compose.yaml         → Docker Compose (PostgreSQL, Keycloak)
-  └── .antigravity/        → Agent rules
+  ├── common/                              → Shared library (no Spring Boot)
+  │   └── src/main/java/.../common/
+  │       └── entity/
+  │           └── BaseEntity.java
+  │
+  ├── enrollment-service/                  → Port 8081, enrollment_db
+  │   └── src/main/java/.../enrollment/
+  │       ├── EnrollmentServiceApplication.java
+  │       ├── entity/
+  │       │   ├── Lead.java
+  │       │   └── Student.java
+  │       ├── enums/
+  │       │   ├── LeadStatus.java
+  │       │   ├── LeadSource.java
+  │       │   └── Gender.java
+  │       ├── repository/
+  │       │   ├── LeadRepository.java
+  │       │   └── StudentRepository.java
+  │       ├── service/
+  │       │   ├── LeadService.java
+  │       │   └── StudentService.java
+  │       ├── service/impl/
+  │       │   ├── LeadServiceImpl.java
+  │       │   └── StudentServiceImpl.java
+  │       ├── controller/
+  │       │   ├── LeadController.java
+  │       │   └── StudentController.java
+  │       ├── dto/
+  │       │   ├── request/
+  │       │   └── response/
+  │       ├── config/
+  │       │   └── SecurityConfig.java
+  │       └── exception/
+  │           └── GlobalExceptionHandler.java
+  │
+  ├── academic-service/                    → Port 8082, academic_db
+  │   └── src/main/java/.../academic/
+  │       ├── AcademicServiceApplication.java
+  │       ├── entity/
+  │       │   ├── Teacher.java
+  │       │   ├── Course.java
+  │       │   ├── Clazz.java               ← tên tránh java.lang.Class
+  │       │   └── ClassEnrollment.java
+  │       ├── enums/
+  │       │   ├── CourseStatus.java
+  │       │   ├── ClassStatus.java
+  │       │   └── EnrollmentStatus.java
+  │       ├── repository/
+  │       ├── service/ + service/impl/
+  │       ├── controller/
+  │       ├── dto/
+  │       └── config/
+  │
+  ├── assessment-service/                  → Port 8083, assessment_db
+  │   └── src/main/java/.../assessment/
+  │       ├── AssessmentServiceApplication.java
+  │       ├── entity/
+  │       │   ├── Assessment.java
+  │       │   └── Grade.java
+  │       ├── enums/
+  │       │   └── AssessmentType.java
+  │       ├── repository/
+  │       ├── service/ + service/impl/
+  │       ├── controller/
+  │       ├── dto/
+  │       └── config/
+  │
+  ├── finance-service/                     → Port 8084, finance_db
+  │   └── src/main/java/.../finance/
+  │       ├── FinanceServiceApplication.java
+  │       ├── entity/
+  │       │   ├── Invoice.java
+  │       │   └── Payment.java
+  │       ├── enums/
+  │       │   ├── InvoiceStatus.java
+  │       │   ├── PaymentMethod.java
+  │       │   └── PaymentStatus.java
+  │       ├── repository/
+  │       ├── service/ + service/impl/
+  │       ├── controller/
+  │       ├── dto/
+  │       └── config/
+  │
+  ├── docker/
+  │   └── init-databases.sh                → Tạo 4 databases on startup
+  ├── documents/                           → Tài liệu dự án
+  ├── build.gradle                         → Root: subprojects + service config
+  ├── settings.gradle                      → include 5 modules
+  ├── compose.yaml                         → PostgreSQL 16
+  ├── .env                                 → DB credentials
+  └── .antigravity/
+      └── rules.md
   ```
 
 ## 3. Coding Conventions & Standards
