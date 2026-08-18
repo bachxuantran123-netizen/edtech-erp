@@ -48,7 +48,7 @@ services:
   keycloak:
     image: 'quay.io/keycloak/keycloak:26.2'
     container_name: edtech-keycloak
-    command: start-dev
+    command: start-dev --import-realm
     environment:
       # Database
       KC_DB: postgres
@@ -65,6 +65,8 @@ services:
       KC_LOG_LEVEL: INFO
     ports:
       - '8080:8080'
+    volumes:
+      - ./docker/keycloak/realm-edtech.json:/opt/keycloak/data/import/realm-edtech.json:ro
     depends_on:
       keycloak-db:
         condition: service_healthy

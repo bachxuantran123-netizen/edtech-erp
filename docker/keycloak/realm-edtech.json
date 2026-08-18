@@ -1,0 +1,139 @@
+{
+  "realm": "edtech",
+  "enabled": true,
+  "displayName": "EdTech ERP",
+
+  "accessTokenLifespan": 300,
+  "ssoSessionIdleTimeout": 604800,
+  "ssoSessionMaxLifespan": 604800,
+
+  "registrationAllowed": false,
+  "registrationEmailAsUsername": false,
+  "resetPasswordAllowed": true,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "verifyEmail": false,
+
+  "roles": {
+    "realm": [
+      {
+        "name": "ADMIN",
+        "description": "System administrator — full access"
+      },
+      {
+        "name": "ADMISSION",
+        "description": "Admission staff — manage leads and student enrollment"
+      },
+      {
+        "name": "TEACHER",
+        "description": "Teacher — manage classes, grades, and assessments"
+      },
+      {
+        "name": "STUDENT",
+        "description": "Student — view courses, grades, and invoices"
+      }
+    ]
+  },
+
+  "clients": [
+    {
+      "clientId": "edtech-frontend",
+      "name": "EdTech Frontend App",
+      "description": "Public client for web/mobile applications",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [
+        "http://localhost:3000/*",
+        "http://localhost:5173/*"
+      ],
+      "webOrigins": [
+        "http://localhost:3000",
+        "http://localhost:5173"
+      ],
+      "protocol": "openid-connect",
+      "attributes": {
+        "post.logout.redirect.uris": "http://localhost:3000/*##http://localhost:5173/*"
+      },
+      "protocolMappers": [
+        {
+          "name": "realm-roles-mapper",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "config": {
+            "claim.name": "roles",
+            "jsonType.label": "String",
+            "multivalued": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "edtech-services",
+      "name": "EdTech Service-to-Service",
+      "description": "Confidential client for inter-service communication (Client Credentials Grant)",
+      "enabled": true,
+      "publicClient": false,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "secret": "edtech-services-secret",
+      "protocol": "openid-connect",
+      "protocolMappers": [
+        {
+          "name": "realm-roles-mapper",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "config": {
+            "claim.name": "roles",
+            "jsonType.label": "String",
+            "multivalued": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+
+  "users": [
+    {
+      "username": "admin",
+      "email": "admin@edtech.local",
+      "firstName": "Admin",
+      "lastName": "System",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "123456",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["ADMIN"]
+    },
+    {
+      "username": "teacher1",
+      "email": "teacher1@edtech.local",
+      "firstName": "Nguyen",
+      "lastName": "Teacher",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "123456",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["TEACHER"]
+    }
+  ]
+}
