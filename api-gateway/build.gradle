@@ -1,0 +1,35 @@
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+}
+
+ext {
+    set('springCloudVersion', "2025.1.2")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+dependencies {
+    // Spring Cloud Gateway (reactive, based on WebFlux)
+    implementation 'org.springframework.cloud:spring-cloud-starter-gateway-server-webflux'
+
+    // OAuth2 Resource Server for JWT validation
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+
+    // Actuator for health checks
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // Environment variables from .env
+    implementation 'me.paulschwarz:spring-dotenv:4.0.0'
+
+    // Dev tools
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // Testing
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
