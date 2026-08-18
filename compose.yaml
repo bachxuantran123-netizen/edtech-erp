@@ -1,6 +1,10 @@
 services:
+  # ============================================================
+  # PostgreSQL for Application Services (4 databases)
+  # ============================================================
   postgres:
     image: 'postgres:16'
+    container_name: edtech-postgres
     environment:
       POSTGRES_USER: ${DB_USERNAME:-postgres}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-123456}
@@ -10,6 +14,67 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./docker/init-databases.sh:/docker-entrypoint-initdb.d/init-databases.sh
+    networks:
+      - edtech-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================================
+  # PostgreSQL for Keycloak (isolated instance)
+  # ============================================================
+  keycloak-db:
+    image: 'postgres:16'
+    container_name: edtech-keycloak-db
+    environment:
+      POSTGRES_USER: ${KEYCLOAK_DB_USERNAME:-keycloak}
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD:-keycloak}
+      POSTGRES_DB: ${KEYCLOAK_DB_NAME:-keycloak_db}
+    volumes:
+      - keycloak_db_data:/var/lib/postgresql/data
+    networks:
+      - edtech-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${KEYCLOAK_DB_USERNAME:-keycloak}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================================
+  # Keycloak 26.2 — Identity & Access Management
+  # ============================================================
+  keycloak:
+    image: 'quay.io/keycloak/keycloak:26.2'
+    container_name: edtech-keycloak
+    command: start-dev
+    environment:
+      # Database
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/${KEYCLOAK_DB_NAME:-keycloak_db}
+      KC_DB_USERNAME: ${KEYCLOAK_DB_USERNAME:-keycloak}
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD:-keycloak}
+      # Admin credentials
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      # Dev mode: disable HTTPS requirement
+      KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HTTP_ENABLED: true
+      KC_LOG_LEVEL: INFO
+    ports:
+      - '8080:8080'
+    depends_on:
+      keycloak-db:
+        condition: service_healthy
+    networks:
+      - edtech-network
+
+networks:
+  edtech-network:
+    driver: bridge
 
 volumes:
   postgres_data:
+  keycloak_db_data:
