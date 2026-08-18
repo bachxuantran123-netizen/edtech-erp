@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      # Global CORS configuration
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins: "*"
+            allowed-methods: "*"
+            allowed-headers: "*"
+
+      # Route definitions — forward requests to downstream services
+      routes:
+        - id: enrollment-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/enrollments/**, /api/leads/**, /api/students/**
+
+        - id: academic-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/teachers/**, /api/courses/**, /api/classes/**
+
+        - id: assessment-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/assessments/**, /api/grades/**
+
+        - id: finance-service
+          uri: http://localhost:8084
+          predicates:
+            - Path=/api/invoices/**, /api/payments/**
+
+  # JWT validation via Keycloak
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/edtech
+          jwk-set-uri: http://localhost:8080/realms/edtech/protocol/openid-connect/certs
+
+server:
+  port: 9000
+
+# Logging
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.security: DEBUG

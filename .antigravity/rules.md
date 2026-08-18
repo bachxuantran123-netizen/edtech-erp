@@ -20,6 +20,11 @@
   │       └── entity/
   │           └── BaseEntity.java
   │
+  ├── api-gateway/                         → Port 9000, Spring Cloud Gateway (WebFlux)
+  │   └── src/main/java/.../gateway/
+  │       ├── ApiGatewayApplication.java
+  │       └── config/
+  │
   ├── enrollment-service/                  → Port 8081, enrollment_db
   │   └── src/main/java/.../enrollment/
   │       ├── EnrollmentServiceApplication.java
@@ -102,9 +107,10 @@
   │   └── init-databases.sh                → Tạo 4 databases on startup
   ├── documents/                           → Tài liệu dự án
   ├── build.gradle                         → Root: subprojects + service config
-  ├── settings.gradle                      → include 5 modules
-  ├── compose.yaml                         → PostgreSQL 16
-  ├── .env                                 → DB credentials
+  ├── settings.gradle                      → include 6 modules
+  ├── compose.yaml                         → PostgreSQL 16 + Keycloak 26.2
+  ├── .env                                 → DB + Keycloak credentials
+  ├── .env.example                         → Template .env (committed)
   └── .antigravity/
       └── rules.md
   ```
