@@ -17,13 +17,16 @@
   edtech-erp/
   ├── common/                              → Shared library (no Spring Boot)
   │   └── src/main/java/.../common/
-  │       └── entity/
-  │           └── BaseEntity.java
+  │       ├── entity/
+  │       │   └── BaseEntity.java
+  │       └── dto/
+  │           └── ApiResponse.java          ← Shared response wrapper
   │
   ├── api-gateway/                         → Port 9000, Spring Cloud Gateway (WebFlux)
   │   └── src/main/java/.../gateway/
   │       ├── ApiGatewayApplication.java
   │       └── config/
+  │           └── SecurityConfig.java       ← JWT validation + role converter
   │
   ├── enrollment-service/                  → Port 8081, enrollment_db
   │   └── src/main/java/.../enrollment/
@@ -49,11 +52,17 @@
   │       │   └── StudentController.java
   │       ├── dto/
   │       │   ├── request/
+  │       │   │   ├── CreateLeadRequest.java
+  │       │   │   └── UpdateLeadRequest.java
   │       │   └── response/
+  │       │       └── LeadResponse.java
   │       ├── config/
-  │       │   └── SecurityConfig.java
+  │       │   └── SecurityConfig.java       ← JWT validation + @PreAuthorize
   │       └── exception/
-  │           └── GlobalExceptionHandler.java
+  │           ├── GlobalExceptionHandler.java
+  │           ├── ResourceNotFoundException.java
+  │           ├── DuplicateResourceException.java
+  │           └── BusinessRuleException.java
   │
   ├── academic-service/                    → Port 8082, academic_db
   │   └── src/main/java/.../academic/

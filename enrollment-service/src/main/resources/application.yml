@@ -14,5 +14,13 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
 
+  # JWT validation via Keycloak
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/edtech
+          jwk-set-uri: http://localhost:8080/realms/edtech/protocol/openid-connect/certs
+
 server:
   port: 8081
