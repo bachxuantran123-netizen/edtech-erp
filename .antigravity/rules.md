@@ -24,6 +24,7 @@
   │   └── src/main/java/.../gateway/
   │       ├── ApiGatewayApplication.java
   │       └── config/
+  │           └── SecurityConfig.java       ← JWT validation + role converter
   │
   ├── enrollment-service/                  → Port 8081, enrollment_db
   │   └── src/main/java/.../enrollment/
