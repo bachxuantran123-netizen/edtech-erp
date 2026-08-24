@@ -6,7 +6,7 @@
 | Epic 1: Nền tảng & Bảo mật | US 1.3: Cấu hình Role/Group Keycloak | Task 4: Cấu hình Realm EdTech và Client | Sprint 0 | Done | Unassigned | High | 3 |
 | Epic 1: Nền tảng & Bảo mật | US 1.2: Cấu hình API Gateway | Task 5: Viết code cho API Gateway validate JWT | Sprint 0 | Done | Unassigned | High | 5 |
 | Epic 2: Tuyển sinh | US 2.1: Quản lý danh sách Leads | Task 1: Khởi tạo Enrollment Service | Sprint 1 | Done | Unassigned | Medium | 3 |
-| Epic 2: Tuyển sinh | US 2.1: Quản lý danh sách Leads | Task 2: Viết API CRUD Leads | Sprint 1 | To Do | Unassigned | Medium | 5 |
+| Epic 2: Tuyển sinh | US 2.1: Quản lý danh sách Leads | Task 2: Viết API CRUD Leads | Sprint 1 | Done | Unassigned | Medium | 5 |
 | Epic 2: Tuyển sinh | US 2.2: Chuyển đổi Lead thành Học viên | Task 3: Viết API chuyển Lead tích hợp tạo user Keycloak | Sprint 1 | To Do | Unassigned | High | 8 |
 | Epic 2: Tuyển sinh | US 2.2: Chuyển đổi Lead thành Học viên | Task 4: Viết Unit Test cho luồng tạo Học viên | Sprint 1 | To Do | Unassigned | Medium | 4 |
 | Epic 3: Đào tạo | US 3.1: Quản lý Khóa học | Task 1: Khởi tạo Academic Service | Sprint 2 | Done | Unassigned | Medium | 3 |
